@@ -1,5 +1,8 @@
 package travel;
 
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+
 public abstract class TravelPackageBuilder {
 
     protected final TravelPackage travelPackage = new TravelPackage();
@@ -43,6 +46,13 @@ public abstract class TravelPackageBuilder {
     }
 
     protected abstract void applyDefaults();
+
+
+    protected final void applyDefault(Supplier<String> currentValue, Consumer<String> setter, String defaultValue) {
+        if (currentValue.get() == null) {
+            setter.accept(defaultValue);
+        }
+    }
 
     private void validate() {
         if (travelPackage.getDestination() == null || travelPackage.getDestination().isBlank()) {
