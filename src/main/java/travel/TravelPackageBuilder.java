@@ -1,18 +1,55 @@
 package travel;
 
-public interface TravelPackageBuilder {
+public abstract class TravelPackageBuilder {
 
-    TravelPackageBuilder setDestination(String destination);
+    protected final TravelPackage travelPackage = new TravelPackage();
 
-    TravelPackageBuilder setHotel(String hotel);
+    public TravelPackageBuilder setDestination(String destination) {
+        travelPackage.setDestination(destination);
+        return this;
+    }
 
-    TravelPackageBuilder setFlight(String flight);
+    public TravelPackageBuilder setHotel(String hotel) {
+        travelPackage.setHotel(hotel);
+        return this;
+    }
 
-    TravelPackageBuilder setTransport(String transport);
+    public TravelPackageBuilder setFlight(String flight) {
+        travelPackage.setFlight(flight);
+        return this;
+    }
 
-    TravelPackageBuilder setMeals(String meals);
+    public TravelPackageBuilder setTransport(String transport) {
+        travelPackage.setTransport(transport);
+        return this;
+    }
 
-    TravelPackageBuilder setActivities(String activities);
+    public TravelPackageBuilder setMeals(String meals) {
+        travelPackage.setMeals(meals);
+        return this;
+    }
 
-    TravelPackage build();
+    public TravelPackageBuilder setActivities(String activities) {
+        travelPackage.setActivities(activities);
+        return this;
+    }
+
+    // Template method: every subclass gets the same defaulting + validation
+    // sequence for free, so none of them can skip or duplicate it.
+    public final TravelPackage build() {
+        applyDefaults();
+        validate();
+        return travelPackage;
+    }
+
+    protected abstract void applyDefaults();
+
+    private void validate() {
+        if (travelPackage.getDestination() == null || travelPackage.getDestination().isBlank()) {
+            throw new IllegalStateException("Cannot build TravelPackage: destination is required");
+        }
+        if (travelPackage.getFlight() == null || travelPackage.getFlight().isBlank()) {
+            throw new IllegalStateException("Cannot build TravelPackage: flight is required");
+        }
+    }
 }
