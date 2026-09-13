@@ -33,46 +33,77 @@ public class Main {
     private static final String[] TRANSPORT_OPTIONS = {"Public transport", "Rental car", "Hotel transfer", "4x4 vehicle", "Private driver", "Bicycle rental"};
     private static final String[] MEALS_OPTIONS = {"Self-catered", "Local cuisine", "Breakfast included", "Half board", "All-inclusive", "Fine dining package"};
 
+    private static final String SECTION_DIVIDER = "   ";
+
     public static void main(String[] args) {
+        System.out.println("     TRAVEL PACKAGE BUILDER");
+
+        runDirectorDemo();
+
         try (Scanner scanner = new Scanner(System.in)) {
-            System.out.println("     TRAVEL PACKAGE BUILDER");
-
-            TravelType type = promptEnum(scanner, "\nChoose travel type:",
-                    new String[]{"Adventure", "Relaxation", "Cultural"}, TravelType.values());
-            if (type == null) return;
-
-            TravelPackageBuilder builder = createBuilder(type);
-
-            String destination = promptFromList(scanner, "\nChoose destination:", type.destinations);
-            if (destination == null) return;
-            builder.setDestination(destination);
-
-            String flight = promptFromList(scanner, "\nChoose flight:", FLIGHT_OPTIONS);
-            if (flight == null) return;
-            builder.setFlight(flight);
-
-            String hotel = promptFromList(scanner, "\nChoose hotel:", HOTEL_OPTIONS);
-            if (hotel == null) return;
-            builder.setHotel(hotel);
-
-            String transport = promptFromList(scanner, "\nChoose transport:", TRANSPORT_OPTIONS);
-            if (transport == null) return;
-            builder.setTransport(transport);
-
-            String meals = promptFromList(scanner, "\nChoose meals:", MEALS_OPTIONS);
-            if (meals == null) return;
-            builder.setMeals(meals);
-
-            String activities = promptFromList(scanner, "\nChoose activities:", type.activities);
-            if (activities == null) return;
-            builder.setActivities(activities);
-
-            TravelPackage travelPackage = builder.build();
-
-            System.out.println("\n   YOUR TRAVEL PACKAGE       ");
-            System.out.println(travelPackage);
-            System.out.println("\n   Have a great time!\uD83C\uDF89\uD83C\uDF89      ");
+            System.out.println(SECTION_DIVIDER);
+            System.out.print("\nWould you like to build your own custom package? (y/n): ");
+            String answer = scanner.nextLine().trim();
+            if (answer.equalsIgnoreCase("y")) {
+                buildCustomPackage(scanner);
+            }
         }
+    }
+
+    private static void runDirectorDemo() {
+        Director director = new Director();
+
+        TravelPackage adventure = director.buildPatagoniaAdventureTrek(new AdventureTravelBuilder());
+        TravelPackage relaxation = director.buildBaliRelaxationWeek(new RelaxationTravelBuilder());
+        TravelPackage cultural = director.buildRomeCulturalTour(new CulturalTravelBuilder());
+
+        System.out.println("\n   PRESET PACKAGES (built via Director)   ");
+        printPackage("Adventure preset", adventure);
+        printPackage("Relaxation preset", relaxation);
+        printPackage("Cultural preset", cultural);
+    }
+
+    private static void printPackage(String label, TravelPackage travelPackage) {
+        System.out.println(SECTION_DIVIDER);
+        System.out.println(label);
+        System.out.println(travelPackage);
+    }
+
+    private static void buildCustomPackage(Scanner scanner) {
+        TravelType type = promptEnum(scanner, "\nChoose travel type:",
+                new String[]{"Adventure", "Relaxation", "Cultural"}, TravelType.values());
+        if (type == null) return;
+
+        TravelPackageBuilder builder = createBuilder(type);
+
+        String destination = promptFromList(scanner, "\nChoose destination:", type.destinations);
+        if (destination == null) return;
+        builder.setDestination(destination);
+
+        String flight = promptFromList(scanner, "\nChoose flight:", FLIGHT_OPTIONS);
+        if (flight == null) return;
+        builder.setFlight(flight);
+
+        String hotel = promptFromList(scanner, "\nChoose hotel:", HOTEL_OPTIONS);
+        if (hotel == null) return;
+        builder.setHotel(hotel);
+
+        String transport = promptFromList(scanner, "\nChoose transport:", TRANSPORT_OPTIONS);
+        if (transport == null) return;
+        builder.setTransport(transport);
+
+        String meals = promptFromList(scanner, "\nChoose meals:", MEALS_OPTIONS);
+        if (meals == null) return;
+        builder.setMeals(meals);
+
+        String activities = promptFromList(scanner, "\nChoose activities:", type.activities);
+        if (activities == null) return;
+        builder.setActivities(activities);
+
+        TravelPackage travelPackage = builder.build();
+
+        printPackage("   YOUR CUSTOM PACKAGE", travelPackage);
+        System.out.println("\n   Have a great time!\uD83C\uDF89\uD83C\uDF89      ");
     }
 
     private static TravelPackageBuilder createBuilder(TravelType type) {
