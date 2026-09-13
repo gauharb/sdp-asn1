@@ -9,17 +9,9 @@ public class RelaxationTravelBuilder extends TravelPackageBuilder {
 
     @Override
     protected void applyDefaults() {
-        if (travelPackage.getHotel() == null) {
-            travelPackage.setHotel(DEFAULT_HOTEL);
-        }
-        if (travelPackage.getTransport() == null) {
-            travelPackage.setTransport(DEFAULT_TRANSPORT);
-        }
-        if (travelPackage.getMeals() == null) {
-            travelPackage.setMeals(DEFAULT_MEALS);
-        }
-        if (travelPackage.getActivities() == null) {
-            travelPackage.setActivities(DEFAULT_ACTIVITIES);
-        }
+        applyDefault(travelPackage::getHotel, travelPackage::setHotel, DEFAULT_HOTEL);
+        applyDefault(travelPackage::getTransport, travelPackage::setTransport, DEFAULT_TRANSPORT);
+        applyDefault(travelPackage::getMeals, travelPackage::setMeals, DEFAULT_MEALS);
+        applyDefault(travelPackage::getActivities, travelPackage::setActivities, DEFAULT_ACTIVITIES);
     }
 }
